@@ -79,6 +79,7 @@ public class PlayerMechanics : Character
         quantityText.text = "Health: " + hitPoints.ToString();
         if (hitPoints <=0 )
         {
+            healthbar.UpdateHealthBar(0, 0);
             Destroy(gameObject);
         }
 

@@ -33,11 +33,16 @@ public class Player : MonoBehaviour
     private string JUMP_ANIMATION = "isJumping";
 
     private string ATTACK1_ANIMATION = "isAttacking";
+
     private string STOP_ANIMATION = "notAttacking";
 
     private bool isHurt = false;
 
     private string GROUND_TAG = "Ground";
+
+    public Transform attackPoint;
+    public float attackRange = 0.5f;
+    public LayerMask enemyLayers;
 
     // Start is called before the first frame update
 
@@ -107,16 +112,35 @@ public class Player : MonoBehaviour
             anim.SetTrigger(ATTACK1_ANIMATION);
             isAttacking = true;
 
+            //Detect enemies in range
+            Collider2D[] hitenemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+
+            foreach (Collider2D enemy in hitenemies)
+            {
+                Debug.Log("Enemy hit");
+                enemy.GetComponent<Enemy>().TakeDamage(gameObject.GetComponent<PlayerMechanics>().attackPoints);
+            }
+
+
         }
 
         if (Input.GetKeyUp(KeyCode.Z))
         {
             // Stop the attack animation by resetting the trigger parameter
             anim.SetTrigger(STOP_ANIMATION);
-            isAttacking = false;
+            
         }
 
     }
+
+    void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
     public void TakeDamage()
     {
         // Trigger the hurt animation
@@ -146,12 +170,6 @@ public class Player : MonoBehaviour
             anim.SetBool(JUMP_ANIMATION, false);
         }
 
-        if (collision.gameObject.tag == "Enemy" && isAttacking)
-        {
-
-            enemy = collision.gameObject.GetComponent<Enemy>();
-            enemy.TakeDamage(playerMechanics.attackPoints);
-        }
 
 
     }

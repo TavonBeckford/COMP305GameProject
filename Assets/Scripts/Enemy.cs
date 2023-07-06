@@ -6,6 +6,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
 {
+    public Animator animator;
 
     [SerializeField] private GameObject[] itemReference;
 
@@ -39,14 +40,29 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         health -= dmg;
+
+        animator.SetTrigger("Hurt");
+
+        //play hurt animation
         
         if (health <= 0)
         {
 
-            Destroy(gameObject);
+            Die();
         }
         healthbar.UpdateHealthBar(maxHealth, health);
 
+    }
+
+    void Die()
+    {
+        Debug.Log("Enemy Died");
+        animator.SetBool("isDead", true);
+
+        //Disable enemy
+
+
+        StartCoroutine(removeSkeleton());
     }
 
 
@@ -57,5 +73,16 @@ public class Enemy : MonoBehaviour
         Vector3 spawnPosition = transform.position + new Vector3(1f, -0.5f, 0f); // Offset the spawn position by 1 unit to the right
         Instantiate(spawnedItem, spawnPosition, Quaternion.identity);
     }
-    
+
+
+    IEnumerator removeSkeleton()
+    {
+        
+        yield return new WaitForSeconds(3);
+        Destroy(gameObject);
+     
+
+
+    }
+
 }

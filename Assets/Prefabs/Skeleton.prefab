@@ -452,11 +452,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28d81b14dc54a3c449eef2210775ae9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 8269672524078701960}
   itemReference:
   - {fileID: 6302956721998243349, guid: abcfa2c0a92bc784cabcd2c96ac7bc08, type: 3}
   - {fileID: 6185602984966946704, guid: 70261611247835a4198156fa8b75f7e8, type: 3}
   spawnedItem: {fileID: 0}
-  damage: 5
+  damage: 1
   health: 100
   maxHealth: 100
   playerMechanics: {fileID: 0}

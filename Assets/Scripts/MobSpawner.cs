@@ -35,6 +35,7 @@ public class MobSpawner : MonoBehaviour
         {
             StartCoroutine(SpawnMonsters());
             hasCollided = true;
+            
         }
     }
 
@@ -46,12 +47,13 @@ public class MobSpawner : MonoBehaviour
             yield return new WaitForSeconds(1);
             randomIndex = 0;
        
-            spawnedMonster = Instantiate(monsterReference[randomIndex]);
-            spawnedMonster.transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z); // to flip the monster orientation
+            spawnedMonster = Instantiate(monsterReference[randomIndex], transform.position, transform.rotation);
+            // spawnedMonster.transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z); // to flip the monster orientation
         }
+        Destroy(gameObject);
         //spawnedMonster = Instantiate(monsterReference[randomIndex]);
         //spawnedMonster.transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z); // to flip the monster orientation
-        
+
 
     }
 }
