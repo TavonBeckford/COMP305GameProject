@@ -15,7 +15,8 @@ public class Enemy : MonoBehaviour
     public int damage;
     public int health;
     public int maxHealth= 100;
-    public PlayerMechanics playerMechanics;
+
+    public Rigidbody2D rb;
 
     private int randomIndex;
 
@@ -27,28 +28,24 @@ public class Enemy : MonoBehaviour
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.gameObject.tag == "Player")
-        {
-
-            playerMechanics = collision.gameObject.GetComponent<PlayerMechanics>();
-            playerMechanics.TakeDamage(damage);
-        }
-    }
+    
 
     public void TakeDamage(int dmg)
     {
         health -= dmg;
 
-        animator.SetTrigger("Hurt");
-
         //play hurt animation
-        
+        animator.SetTrigger("Hurt");
+        animator.SetBool("Attack", false);
+
         if (health <= 0)
         {
-
+            GetComponent<EnemyCombat>().enabled = false;
+            rb.constraints = RigidbodyConstraints2D.FreezePosition;
+            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<CircleCollider2D>().enabled = false;
             Die();
+            
         }
         healthbar.UpdateHealthBar(maxHealth, health);
 
@@ -57,12 +54,23 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         Debug.Log("Enemy Died");
+
+        GameObject parentGameObject = gameObject;
+        GameObject childGameObject = parentGameObject.transform.Find("Healthbar").gameObject;
+
+        // Disable the child GameObject
+        childGameObject.SetActive(false);
+
         animator.SetBool("isDead", true);
 
+
+        //GetComponent<CircleCollider2D>().enabled = false;
+
         //Disable enemy
+        //GetComponent<Collider2D>().enabled = false;
 
 
-        StartCoroutine(removeSkeleton());
+        StartCoroutine(removeEnemy());
     }
 
 
@@ -75,12 +83,11 @@ public class Enemy : MonoBehaviour
     }
 
 
-    IEnumerator removeSkeleton()
+    IEnumerator removeEnemy()
     {
         
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         Destroy(gameObject);
-     
 
 
     }

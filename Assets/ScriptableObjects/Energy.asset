@@ -15,6 +15,6 @@ MonoBehaviour:
   objectName: Energy
   sprite: {fileID: 21300000, guid: 54f395a7c3e508d46ab3f9481df6827c, type: 3}
   quantity: 1
-  increaseBy: 5
+  increaseBy: 50
   stackable: 1
   itemType: 1

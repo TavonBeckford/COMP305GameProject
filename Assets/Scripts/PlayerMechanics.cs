@@ -11,11 +11,17 @@ public class PlayerMechanics : Character
     public TextMeshProUGUI quantityText;
     private bool isTakingDamage = false;
 
+    public Animator animator;
+    private Rigidbody2D rb;
+
     private void Start()
     {
         healthbar.UpdateHealthBar(maxHitPoints, hitPoints);
         energybar.UpdateEnergyBar(maxEnergy, energyPoints);
         quantityText.text = "Health: " + hitPoints.ToString();
+        rb = GetComponent<Rigidbody2D>();
+
+
     }
 
 
@@ -59,7 +65,7 @@ public class PlayerMechanics : Character
         quantityText.text = "Health: " + hitPoints.ToString();
         print($"Adjusted hit points by {amount}. New Value: {hitPoints}");
     }
-    private void AdjustEnergyPoints(int amount)
+    public void AdjustEnergyPoints(int amount)
     {
         if (energyPoints < maxEnergy)
         {
@@ -70,20 +76,55 @@ public class PlayerMechanics : Character
         print($"Adjusted energy points by {amount}. New Value: {energyPoints}");
     }
 
+
+    public void ReduceEnergyPoints(int amount)
+    {
+       
+        energyPoints -= amount;
+        energybar.UpdateEnergyBar(maxEnergy, energyPoints);
+        print($"Reduced energy points by {amount}. New Value: {energyPoints}");
+    }
+
+
     public void TakeDamage(int dmg)
     {
 
         hitPoints -= dmg;
+        Debug.Log("this is the dmg" + dmg);
+
+        //play hurt animation
+        animator.SetTrigger("Hurt");
+        animator.SetBool("Attack", false);
+
+
         //gameObject.GetComponent<Player>().TakeDamage();
         healthbar.UpdateHealthBar(maxHitPoints, hitPoints);
         quantityText.text = "Health: " + hitPoints.ToString();
+        Debug.Log("This is my hitpoint" + hitPoints.ToString());
         if (hitPoints <=0 )
         {
             healthbar.UpdateHealthBar(0, 0);
-            Destroy(gameObject);
+            Die();
         }
 
     }
+    void Die()
+    {
+        Debug.Log("Player Died");
 
-    
+
+        animator.SetBool("isDead", true);
+        rb.constraints = RigidbodyConstraints2D.FreezePosition;
+        GetComponent<BoxCollider2D>().enabled = false;
+        GetComponent<CircleCollider2D>().enabled = false;
+        GetComponent<PlayerCombat>().enabled = false;
+        GetComponent<Movement>().enabled = false;
+        GetComponent<PlayerMechanics>().enabled = false;
+
+        //Disable enemy
+        //GetComponent<Collider2D>().enabled = false;
+    }
+
+
+
 }
